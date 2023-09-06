@@ -101,7 +101,7 @@ export default function WeatherBar() {
         {weatherData !== null ? (
           <View style={styles.column}>
             <Text style={styles.value}>{weatherData.tempLow}°C</Text>
-            <Text style={styles.label}>min</Text>
+            <Text style={styles.label}>minimum</Text>
           </View>
         ) : (
           <Text style={styles.value}>Loading...</Text>
