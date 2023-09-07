@@ -6,8 +6,8 @@ import WeatherBar from "./weatherBar.js";
 const App = () => {
   return (
     <View style={styles.container}>
-      <WeatherComponent />
       <WeatherBar />
+      <WeatherComponent />
     </View>
   );
 };
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#4a90e2",
   },
 });
 

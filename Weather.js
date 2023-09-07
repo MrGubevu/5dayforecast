@@ -13,23 +13,23 @@ const WeatherComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Define the API key and URL template
+    // Declaring varibles for the API key & the API url
     const apiKey = "ea746b888533cc57dee30c0998719314";
     const apiUrl =
       "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}";
 
-    // Get user's location using geolocation
+    // Getting user's location using geolocation
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
 
-        // Replace placeholders in the URL with actual latitude, longitude, and API key
+        // Replacing placeholders in the URL with actual latitude, longitude, and API key
         const url = apiUrl
           .replace("{lat}", latitude)
           .replace("{lon}", longitude)
           .replace("{API key}", apiKey);
 
-        // Fetch the 5-day weather forecast data
+        // Fetching the 5-day weather forecast data
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
@@ -46,7 +46,7 @@ const WeatherComponent = () => {
 
             setForecastData(filteredData);
             setIsLoading(false);
-          })
+          }) //Error handlers to handle bad requests
           .catch((error) => {
             console.error("Error fetching weather data:", error);
             setIsLoading(false);
@@ -60,6 +60,7 @@ const WeatherComponent = () => {
     );
   }, []);
 
+  //Creating variables to be used in the User Interface
   const renderForecastItem = ({ item }) => {
     const timestamp = item.dt;
     const date = new Date(timestamp * 1000);
@@ -69,7 +70,7 @@ const WeatherComponent = () => {
     return (
       <View style={styles.forecastItem}>
         <View>
-          <Text>{dayOfWeek}</Text>
+          <Text style={styles.textFont}>{dayOfWeek}</Text>
         </View>
 
         <Image
@@ -78,7 +79,7 @@ const WeatherComponent = () => {
         />
 
         <View>
-          <Text>{celsiusTemperature}°C</Text>
+          <Text style={styles.textFont}>{celsiusTemperature}°C</Text>
         </View>
       </View>
     );
@@ -102,23 +103,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
+    paddingBottom: 30,
   },
+
   forecastItem: {
-    backgroundColor: "#54717a",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "space-between",
-    width: "300px",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    width: "340px",
+    marginTop: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   weatherIcon: {
-    width: "20px",
+    width: "30px",
   },
   textStyle: {
     color: "#fff",
+  },
+  textFont: {
+    color: "white",
+    fontSize: 20,
   },
 });
 

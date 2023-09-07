@@ -4,47 +4,47 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import getCurrentWeather from "./currentWeather";
 import getCurrentLocation from "./currentWeather";
 
-function getImageSource(weatherData) {
-  // Check if weatherData is null or if the necessary properties are missing
-  if (!weatherData?.weather?.[0]?.description) {
-    return require("./assets/Images/sea_sunnypng.png"); // Default image if data is missing
-  }
-
-  const condition = weatherData.weather[0].description.toLowerCase();
-
-  // Check the weather condition and return the corresponding image
-  if (condition.includes("cloud")) {
-    return require("./assets/Images/sea_cloudy.png");
-  } else if (condition.includes("rain")) {
-    return require("./assets/Images/sea_rainy.png");
-  } else if (condition.includes("clear sky")) {
-    return require("./assets/Images/sea_sunnypng.png");
-  } else {
-    return require("./assets/Images/sea_sunnypng.png");
-  }
-}
-const getBackgroundColor = (condition) => {
-  if (!condition) {
-    return "#47ab2f"; // Default background color if condition is missing
-  }
-
-  condition = condition.toLowerCase();
-
-  if (condition.includes("clear")) {
-    return "#47ab2f";
-  } else if (condition.includes("cloud")) {
-    return "#54717a";
-  } else if (condition.includes("rain")) {
-    return "#57575d";
-  } else {
-    return "#57575d"; // Default background color
-  }
-};
-
 export default function WeatherBar() {
-  const [weatherData, setWeatherData] = useState(null);
+  const [weatherData, setWeatherData] = useState({ description: "clear" });
   const [loading, setLoading] = useState(true);
-  const initialWeatherData = null; //Start weatherData as null
+
+  // You may fetch weatherData from an API and update it in useEffect
+
+  useEffect(() => {
+    // Simulate fetching weather data
+    setTimeout(() => {
+      setWeatherData({ description: "cloudy" });
+      setLoading(false);
+    }, 2000);
+  }, []);
+
+  const condition = weatherData.description;
+  const backgroundImage = getImageSource(condition);
+  const backgroundColor = getBackgroundColor(condition);
+
+  function getBackgroundColor(condition) {
+    if (condition === "clear") {
+      return "#4a90e2"; // Light Yellow
+    } else if (condition.includes("cloud")) {
+      return "#54717a"; // Light Sky Blue
+    } else if (condition.includes("rain")) {
+      return "#57575d"; // Steel Blue
+    } else {
+      return "#4a90e2"; // Light Yellow (default)
+    }
+  }
+
+  function getImageSource(condition) {
+    if (condition === "clear") {
+      return require("./Assets/Images/sea_sunnypng.png");
+    } else if (condition.includes("cloud")) {
+      return require("./Assets/Images/sea_cloudy.png");
+    } else if (condition.includes("rain")) {
+      return require("./Assets/Images/sea_rainy.png");
+    } else {
+      return require("./Assets/Images/sea_sunnypng.png");
+    }
+  }
 
   useEffect(() => {
     // Get the user's current location
@@ -76,22 +76,13 @@ export default function WeatherBar() {
   }, []);
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: getBackgroundColor(
-            weatherData?.weather?.[0]?.description
-          ),
-        },
-      ]}
-    >
-      <Image source={getImageSource(weatherData)} style={styles.weatherImage} />
+    <View style={[styles.container, { backgroundColor }]}>
+      <Image source={backgroundImage} style={styles.backgroundImage} />
 
       {weatherData ? ( // Check if weatherData is not null
         <View style={styles.temperatureColumn}>
-          <Text style={styles.tempDegree}>{weatherData.temperature}°C</Text>
-          <Text style={styles.cloudyText}>{weatherData.description}</Text>
+          <Text style={styles.tempDegree}>{weatherData.temperature}°</Text>
+          <Text style={styles.conditionText}>{weatherData.description}</Text>
         </View>
       ) : (
         <Text style={styles.value}>Loading...</Text> // Show a loading message while data is being fetched
@@ -101,7 +92,7 @@ export default function WeatherBar() {
         {weatherData !== null ? (
           <View style={styles.column}>
             <Text style={styles.value}>{weatherData.tempLow}°C</Text>
-            <Text style={styles.label}>minimum</Text>
+            <Text style={styles.label}>min</Text>
           </View>
         ) : (
           <Text style={styles.value}>Loading...</Text>
@@ -136,24 +127,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 10,
+    width: "100%",
+    marginBottom: 100,
+    top: 0,
   },
   flexItemImage: {
     display: "flex",
   },
   temperatureDiv: {
+    display: "flex",
     flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-around",
-    width: "100%",
-    marginTop: 20,
+    justifyContent: "center",
+    top: 250,
   },
+
   WeekForecastDiv: {
+    width: "100%",
     flexDirection: "column", // Stack columns vertically
   },
   column: {
     alignItems: "center",
     textAlign: "center",
+    width: "70%",
   },
   dayContainer: {
     flexDirection: "row",
@@ -167,36 +162,42 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   tempDegree: {
-    fontSize: 70,
+    fontSize: 90,
     color: "white",
+    fontWeight: "600",
   },
-  cloudyText: {
-    fontSize: 30,
+  conditionText: {
+    fontSize: 40,
     color: "white",
+    fontWeight: "600",
   },
   temperatureColumn: {
     position: "absolute",
     alignItems: "center",
     top: 50,
   },
-  weatherImage: {
+  backgroundImage: {
     flex: 1,
+    resizeMode: "cover",
+    position: "absolute",
     width: "100%",
     height: "100%",
-    resizeMode: "stretch",
+    top: 0,
   },
   label: {
     color: "white",
+    fontSize: 20,
   },
   value: {
     color: "white",
-    fontSize: 20,
+    fontSize: 25,
+    fontWeight: "600",
   },
   icons: {
     width: 25,
     height: 25,
   },
-  WeekForecastDiv: {
-    width: "100%",
+  weatherBar: {
+    flex: 1,
   },
 });

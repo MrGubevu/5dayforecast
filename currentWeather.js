@@ -1,12 +1,14 @@
 import axios from "axios";
 import Geolocation from "react-native-geolocation-service";
 
-const GOOGLE_GEOLOCATION_API_KEY = "AIzaSyB-UnGYL8sCsOxbEmzVRi-L-WSnFSoyvGI"; // Replace with your Google Geolocation API key
-const OPENWEATHERMAP_API_KEY = "7345747c2481a6ee0beb4b799895892c"; // Replace with your OpenWeatherMap API key
+//Declaring variables for the Google geolocation & OpenWeather API key
+const GOOGLE_GEOLOCATION_API_KEY = "AIzaSyB-UnGYL8sCsOxbEmzVRi-L-WSnFSoyvGI";
+const OPENWEATHERMAP_API_KEY = "7345747c2481a6ee0beb4b799895892c";
 const GEOLOCATION_API_URL =
   "https://www.googleapis.com/geolocation/v1/geolocate";
 const WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather";
 
+//Creating a function that will fetch the current location of the user
 function getCurrentLocation() {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
@@ -22,9 +24,9 @@ function getCurrentLocation() {
   });
 }
 
+// Below will be a function to get the current weather in the respective geolocation
 const getCurrentWeather = async () => {
   try {
-    // Get the user's current location
     const { latitude, longitude } = await getCurrentLocation();
 
     // Call Google Geolocation API to get the user's location details
@@ -41,6 +43,7 @@ const getCurrentWeather = async () => {
         `${WEATHER_API_URL}?lat=${lat}&lon=${lng}&appid=${OPENWEATHERMAP_API_KEY}&units=metric`
       );
 
+      //Decalre variables we will use to push data into the User Interface
       if (weatherResponse.status === 200) {
         const weatherData = weatherResponse.data;
         const temperature = Math.round(weatherData.main.temp);
